@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'Hack';
+    src: url('Hack-Regular.ttf');
+}
+
+body {
+    font-family: Hack;
+    background-color: #1b1b1b;
+    padding: 0;
+    margin: 0;
+    color:white;
+    margin-left: 10px;
+    margin-top: 10px;
+    line-height: 40%;
+}
+p{
+    font-family: Hack;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+input{
+    font-family: Hack;
+    background:transparent;
+    border:none;
+    outline:none;
+    color: white;
+    width: 90%;
+}
+#dateTime{
+    font-size: 80%;
+    font-style: italic;
+}
