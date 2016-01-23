@@ -8,6 +8,8 @@ $(document).ready( function(){
 });
 
 /*
+* proccessCommand()
+*
 * - Decides on what function to call depedning on the primary key given.
 */
 function proccessCommand(){
@@ -17,6 +19,8 @@ function proccessCommand(){
 
 
 /*
+* appendNewCmdObject()
+*
 * - Makes the current cmd input read only to the user.
 * - Removes id of current cmd for the new cmd input object to use the if 'commandLine'.
 * - Appends a new input object in the div 'terminalSpace'.
@@ -40,8 +44,13 @@ function appendNewCmdObject(){
 }
 
 /*
-* - Removes first word from command string
-* - Compares word to valid internal command words.
+* getKeyword(commandString : String)
+* 
+* commandString := The string the keyword will be extracted from.
+* 
+* returns true | false =: true if a command has been successfully executed, false if an error has occured.
+* Extracts command word, first word of string, and compares the keyword. The correct functions are executed depending on the command word.
+*
 */
 function getKeyWord(cmdString){
     var cmdWord = cmdString.split(" ")[0];
@@ -49,18 +58,26 @@ function getKeyWord(cmdString){
     switch (cmdWord) {
         case 'help':
             helpCommand();
-            break;
+            return true;
         
         default:
             disMessage(cmdWord+": command not found", true);
+            return false;
     }
     
     console.log(cmdWord);
 }
 
 /*
-* - Displays string to terminal.
-* - False or True determins if a break is added at the end | False by default
+* disMessage(messageToDisplay : String)
+* disMessage(messageToDisplay : String, addNewLine : bool)
+*
+* messageToDisplay := The string will be outputed in a <p> object on the html page.
+* addNewLine := [Optional] Adds a <br> tag at the end of the <p> object. If no parameter is passed then a <br> is not added.
+*
+* return null
+*
+* - Outputs a message to the terminal using a paragraph html object which is appended to the #terminalContainer div.
 */
 function disMessage(messageToDisplay, hasBreak){
     if(hasBreak === null){
@@ -73,9 +90,14 @@ function disMessage(messageToDisplay, hasBreak){
     }
 }
 
-
+/*
+* helpCommand()
+* return null
+*
+* Displays valid bash commands by executing disMessage() function.
+*/
 function helpCommand(){
     disMessage("<p> Hywie Martins Bash, Version 0.1.0 </P>", true);
     disMessage("<p> These shell commands are defined internally. Type '<i>help</i>' to see this list.</P>", true);
-    disMessage("<p> | help | ls | cd | mkdir | date | cp | mv</P>", true);
+    disMessage("<p> | help | ls | cd | mkdir <br>| date | cp | mv | tree</P>", true);
 }
