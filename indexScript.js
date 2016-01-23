@@ -8,12 +8,13 @@ $(document).ready( function(){
 });
 
 /*
-* proccessCommand()
+* commandHandler()
+* return null
 *
-* - Decides on what function to call depedning on the primary key given.
+* Function called on enter key event on current command.
 */
-function proccessCommand(){
-    getKeyWord($("#commandLine").val());
+function commandHandler(){
+    processCommand($("#commandLine").val());
     appendNewCmdObject();
 }
 
@@ -38,13 +39,13 @@ function appendNewCmdObject(){
     // Add the event handler to the new input object    
     $("#commandLine").keypress(function (event){
         if(event.which == 13){
-            proccessCommand();
+            commandHandler();
         }
     });
 }
 
 /*
-* getKeyword(commandString : String)
+* processCommand(commandString : String)
 * 
 * commandString := The string the keyword will be extracted from.
 * 
@@ -52,7 +53,7 @@ function appendNewCmdObject(){
 * Extracts command word, first word of string, and compares the keyword. The correct functions are executed depending on the command word.
 *
 */
-function getKeyWord(cmdString){
+function processCommand(cmdString){
     var cmdWord = cmdString.split(" ")[0];
     
     switch (cmdWord) {
