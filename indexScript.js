@@ -61,6 +61,10 @@ function processCommand(cmdString){
             helpCommand();
             return true;
         
+        case 'ls':
+            listCurrentDir();
+            return true;
+        
         default:
             disMessage(cmdWord+": command not found", true);
             return false;
