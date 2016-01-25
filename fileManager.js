@@ -4,7 +4,7 @@
 */
 
 // Global vars
-var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects/",0,1] ];
+var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects/",0,1], ["tic-tac-toe.txt",1,null] ];
 var currentDir = 0;
 
 
@@ -80,6 +80,23 @@ function getCurrentDir(){
         case 0:
             return "<span id='root'>hywel-martin</span>:<span id='dir'>/</span> $ ";
         case 1:
-            return "hywel-martin: /projects $ "
+            return "<span id='root'>hywel-martin</span>:<span id='dir'>/projects</span> $ ";
     }
+}
+
+function cdCommand(arg){
+    var currentFiles = getFilesOnLayer(currentDir,true);
+    
+    if(arg == ".." && currentDir != 0){
+        currentDir--;
+        return true;
+    }
+    for(var i = 0; i < currentFiles.length; i++){
+        if(currentFiles[i][0] === arg && currentFiles[i][2] != null){
+            currentDir = currentFiles[i][2];
+            return true;
+        }
+    }
+    disMessage("Error: directory does not exist");
+    return false;
 }

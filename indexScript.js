@@ -65,6 +65,10 @@ function processCommand(cmdString){
             listCurrentDir();
             return true;
         
+        case 'cd':
+            cdCommand(cmdString.split(" ")[1]);
+            return true;
+        
         default:
             disMessage(cmdWord+": command not found", true);
             return false;
