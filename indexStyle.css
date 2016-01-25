@@ -9,14 +9,14 @@ body {
     padding: 0;
     margin: 0;
     color:white;
-    margin-left: 10px;
     margin-top: 10px;
-    line-height: 40%;
+    line-height: 10%;
 }
 p{
     font-family: Hack;
-    margin-left: 10px;
+    margin-left: 20px;
     font-size: 0.9em;
+    line-height: 1.5em;
 }
 input{
     font-family: Hack;
