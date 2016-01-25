@@ -4,7 +4,7 @@
 */
 
 // Global vars
-var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects",0,1] ];
+var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects/",0,1] ];
 var currentDir = 0;
 
 
@@ -60,7 +60,11 @@ function listCurrentDir(){
         var listString = "";
         
         for(var i = 0; i < currentList.length; i++){
-            listString += currentList[i]+" | ";
+            if((currentList[i]).charAt(currentList[i].length-1) == "/"){
+                listString += "<span id='dir' >"+currentList[i]+"</span> ";
+            } else{
+                listString += currentList[i]+" ";
+            }
         }
         
         disMessage(listString, true);
@@ -68,5 +72,14 @@ function listCurrentDir(){
         
     } else{
         return false;
+    }
+}
+
+function getCurrentDir(){
+    switch(currentDir){
+        case 0:
+            return "<span id='root'>hywel-martin</span>:<span id='dir'>/</span> $ ";
+        case 1:
+            return "hywel-martin: /projects $ "
     }
 }

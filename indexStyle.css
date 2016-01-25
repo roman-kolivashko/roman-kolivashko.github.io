@@ -24,9 +24,17 @@ input{
     border:none;
     outline:none;
     color: white;
-    width: 90%;
+    width: 80%;
 }
 #dateTime{
     font-size: 80%;
     font-style: italic;
+}
+
+#dir{
+    color: #6ABEDB;
+}
+
+#root{
+    color:#8BBE42;
 }

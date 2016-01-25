@@ -33,7 +33,7 @@ function appendNewCmdObject(){
     $("#commandLine").attr("id","");
     
     // Add a new input object and ensure it is focused.
-    $("#terminalContainer").append( "<p>$> <input id=\"commandLine\" maxlength=\"40\"></input></p>" );
+    $("#terminalContainer").append( "<p> "+getCurrentDir()+" <input id=\"commandLine\" maxlength=\"40\" /></p>" );
     $("#commandLine").focus();
     
     // Add the event handler to the new input object    
