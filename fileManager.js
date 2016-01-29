@@ -5,7 +5,7 @@
 
 // Global vars
 var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects/",0,1], ["tic-tac-toe.txt",1,null] ];
-var currentDir = 0;
+var currentDir = [0];
 
 
 /*
@@ -55,7 +55,7 @@ function getFilesOnLayer(layer,returnAsObject){
 */
 
 function listCurrentDir(){
-    var currentList = getFilesOnLayer(currentDir);
+    var currentList = getFilesOnLayer(currentDir[currentDir.length-1]);
     if(currentList != false){
         var listString = "";
         
@@ -74,26 +74,59 @@ function listCurrentDir(){
         return false;
     }
 }
+/*
+* searchFiles(layer of directory / file)
+* return fileArray := Array contains file name, layer it resises in and layer it points to.
+*
+* Linear search through the virtual Directory for the specific file or folder.
+*/
+function searchFiles(pointer){
+    if(pointer == 0){
+        return "/";
+    } else{
+        for(var i = 0; i < virtualDir.length-1; i++){
+            if(virtualDir[i][2] == pointer){
+                return virtualDir[i];
+            }
+        }
+    }
+}
 
+/*
+* getCurrentDir()
+* return String := String that is in an HTML format.
+* 
+* Calculates the current directory and dynamically constructs the path.
+*/
 function getCurrentDir(){
-    switch(currentDir){
-        case 0:
-            return "<span id='root'>hywel-martin</span>:<span id='dir'>/</span> $ ";
-        case 1:
-            return "<span id='root'>hywel-martin</span>:<span id='dir'>/projects</span> $ ";
+    var htmlString = "<span id='root'>hywel-martin</span>:<span id='dir'>/</span>";
+    if(currentDir.length == 1 && currentDir[0] == 0){
+        return "<span id='root'>hywel-martin</span>:<span id='dir'>/</span> $ ";
+    } else{
+        
+        for(var i =1; i < currentDir.length; i++){
+            var tempFile = searchFiles(currentDir[i]);
+            if(i == currentDir.length-1){
+                console.log(tempFile);
+                htmlString += "<span id='dir'>"+(tempFile[0]).substring(0, tempFile[0].length - 1)+"</span> $";
+            } else{
+                htmlString += "<span id='dir'>"+tempFile[0]+"</span>";
+            }
+        }
+        return htmlString;
     }
 }
 
 function cdCommand(arg){
-    var currentFiles = getFilesOnLayer(currentDir,true);
+    var currentFiles = getFilesOnLayer(currentDir[currentDir.length-1],true);
     
     if(arg == ".." && currentDir != 0){
-        currentDir--;
+        currentDir.pop();
         return true;
     }
     for(var i = 0; i < currentFiles.length; i++){
         if(currentFiles[i][0] === arg && currentFiles[i][2] != null){
-            currentDir = currentFiles[i][2];
+            currentDir.push(currentFiles[i][2]);
             return true;
         }
     }
