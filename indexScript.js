@@ -73,6 +73,10 @@ function processCommand(cmdString){
             disMessage(Date());
             return true;
             
+        case 'mkdir':
+            mkDir(cmdString);
+            return true;
+            
         default:
             disMessage(cmdWord+": command not found", true);
             return false;

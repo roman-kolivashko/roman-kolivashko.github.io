@@ -7,6 +7,9 @@
 var virtualDir = [["about.txt",0,null], ["contact.txt",0,null], ["projects/",0,1], ["tic-tac-toe.txt",1,null] ];
 var currentDir = [0];
 
+// Used to keeep track of what pointer numbers are in use and what is free, by default there are 2 pointers.
+var usedPointers = 1;
+
 
 /*
 * getFilesOnLayer(layer : int)
@@ -84,7 +87,7 @@ function searchFiles(pointer){
     if(pointer == 0){
         return "/";
     } else{
-        for(var i = 0; i < virtualDir.length-1; i++){
+        for(var i = 0; i < virtualDir.length; i++){
             if(virtualDir[i][2] == pointer){
                 return virtualDir[i];
             }
@@ -105,12 +108,12 @@ function getCurrentDir(){
     } else{
         
         for(var i =1; i < currentDir.length; i++){
-            var tempFile = searchFiles(currentDir[i]);
+            var tempFile = searchFiles(currentDir[i])[0];
             if(i == currentDir.length-1){
                 console.log(tempFile);
-                htmlString += "<span id='dir'>"+(tempFile[0]).substring(0, tempFile[0].length - 1)+"</span> $";
+                htmlString += "<span id='dir'>"+tempFile.substring(0, tempFile.length - 1)+"</span> $";
             } else{
-                htmlString += "<span id='dir'>"+tempFile[0]+"</span>";
+                htmlString += "<span id='dir'>"+tempFile+"</span>";
             }
         }
         return htmlString;
@@ -132,4 +135,27 @@ function cdCommand(arg){
     }
     disMessage("Error: directory does not exist");
     return false;
+}
+
+
+function mkDir(commandString){
+    
+    // Ensure there is only one argument in command statement
+    if(commandString.split(" ").length > 2){
+        disMessage(" Error: <i>mkdir</i> only takes one argument.");
+        disMessage(" mkdir [ fileName ]");
+    } else{
+        var fileName = commandString.split(" ")[1];
+        
+        if(fileName.charAt(fileName.length-1) != "/"){
+            fileName += "/";
+        }
+        
+        // Push new directory in to file system.
+        virtualDir.push([fileName, currentDir[currentDir.length-1], usedPointers+1]);
+        // Increment used pointers
+        usedPointers ++;
+        
+    }
+    
 }
