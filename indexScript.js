@@ -68,7 +68,11 @@ function processCommand(cmdString){
         case 'cd':
             cdCommand(cmdString.split(" ")[1]);
             return true;
-        
+            
+        case 'date':
+            disMessage(Date());
+            return true;
+            
         default:
             disMessage(cmdWord+": command not found", true);
             return false;
