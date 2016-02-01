@@ -81,6 +81,10 @@ function processCommand(cmdString){
             cp(cmdString);
             return true;
             
+        case 'clear':
+             $("#terminalContainer").empty();
+             return true;
+            
         default:
             disMessage(cmdWord+": command not found", true);
             return false;
@@ -120,5 +124,5 @@ function disMessage(messageToDisplay, hasBreak){
 function helpCommand(){
     disMessage("<p> Hywie Martins Bash, Version 0.1.0 </P>", true);
     disMessage("<p> These shell commands are defined internally. Type '<i>help</i>' to see this list.</P>", true);
-    disMessage("<p> | help | ls | cd | mkdir <br>| date | cp | mv | tree</P>", true);
+    disMessage("<p> | help | ls | cd | mkdir <br>| date | cp | mv | tree | clear</P>", true);
 }

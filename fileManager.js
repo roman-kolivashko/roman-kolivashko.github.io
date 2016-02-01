@@ -274,11 +274,11 @@ function searchByDirectory(directory){
                 
             } else {
                 latestFile = searchFileSystemLayer(dirStrSplit[i],pointer);
-              //  if(!latestFile){
-              //     return false;
-              // } else{
+                if(!latestFile){
+                   return false;
+               } else{
                    pointer = latestFile[2];
-              // }
+              }
             }
          
         }
