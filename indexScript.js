@@ -33,7 +33,7 @@ function appendNewCmdObject(){
     $("#commandLine").attr("id","");
     
     // Add a new input object and ensure it is focused.
-    $("#terminalContainer").append( "<p> "+getCurrentDir()+" <input id=\"commandLine\" maxlength=\"40\" /></p>" );
+    $("#terminalContainer").append( "<p> "+getCurrentDir()+" <input id=\"commandLine\" maxlength=\"80\" /></p>" );
     $("#commandLine").focus();
     
     // Add the event handler to the new input object    
@@ -75,6 +75,10 @@ function processCommand(cmdString){
             
         case 'mkdir':
             mkDir(cmdString);
+            return true;
+        
+        case 'cp':
+            cp(cmdString);
             return true;
             
         default:

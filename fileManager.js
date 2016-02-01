@@ -36,7 +36,6 @@ function getFilesOnLayer(layer,returnAsObject){
     }else {
         for(var i = 0; i < virtualDir.length; i++){
             if(virtualDir[i][1] == layer){
-                console.log(returnAsObject);
                 if(returnAsObject === false){
                     filesOnLayer.push(virtualDir[i][0]);
                 } else{
@@ -60,17 +59,17 @@ function getFilesOnLayer(layer,returnAsObject){
 function listCurrentDir(){
     var currentList = getFilesOnLayer(currentDir[currentDir.length-1]);
     if(currentList != false){
-        var listString = "";
+        var listStringHTML = "";
         
         for(var i = 0; i < currentList.length; i++){
             if((currentList[i]).charAt(currentList[i].length-1) == "/"){
-                listString += "<span id='dir' >"+currentList[i]+"</span> ";
+                listStringHTML += "<span id='dir' >"+currentList[i]+"</span> ";
             } else{
-                listString += currentList[i]+" ";
+                listStringHTML += currentList[i]+" ";
             }
         }
         
-        disMessage(listString, true);
+        disMessage(listStringHTML, true);
         return true;
         
     } else{
@@ -78,19 +77,35 @@ function listCurrentDir(){
     }
 }
 /*
-* searchFiles(layer of directory / file)
+* searchFiles(layer of directory)
+* searchFiles(layer of directory, fileName)
 * return fileArray := Array contains file name, layer it resises in and layer it points to.
+* return false := more than one file exists of that name in the system.
 *
 * Linear search through the virtual Directory for the specific file or folder.
 */
-function searchFiles(pointer){
-    if(pointer == 0){
-        return "/";
-    } else{
-        for(var i = 0; i < virtualDir.length; i++){
-            if(virtualDir[i][2] == pointer){
-                return virtualDir[i];
+function searchFiles(pointer, fileName){
+    if(fileName == undefined || fileName == "" || fileName == null){
+        if(pointer == 0){
+            return "/";
+        } else{
+            for(var i = 0; i < virtualDir.length; i++){
+                if(virtualDir[i][2] == pointer){
+                    return virtualDir[i];
+                }
             }
+        }
+    } else{
+        var returnFiles = [];
+        for(var i = 0; i < virtualDir.length; i++){
+            if(virtualDir[i][0] == fileName){
+                returnFiles.push(virtualDir[i]);
+            }
+        }
+        if(returnFiles.length == 1){
+            return returnFiles[0];
+        } else{
+            return false;
         }
     }
 }
@@ -110,7 +125,6 @@ function getCurrentDir(){
         for(var i =1; i < currentDir.length; i++){
             var tempFile = searchFiles(currentDir[i])[0];
             if(i == currentDir.length-1){
-                console.log(tempFile);
                 htmlString += "<span id='dir'>"+tempFile.substring(0, tempFile.length - 1)+"</span> $";
             } else{
                 htmlString += "<span id='dir'>"+tempFile+"</span>";
@@ -158,4 +172,140 @@ function mkDir(commandString){
         
     }
     
+}
+function cp(commandString) {
+    commandString = commandString.split(" ");
+    if (commandString.length != 3) {
+        disMessage(" Error: <i>cp</i> only takes two argument.");
+        disMessage(" cp [ fileToCopy ] [ nameOfCopy ]");
+    }
+    else {
+        var arg1 = commandString[1];
+        var arg2 = commandString[2];
+        var sourceFile;
+        var destFile;
+        var fileName;
+        var sourceIsFile;
+
+       
+        sourceFile = searchByDirectory(arg1);
+        destFile = searchByDirectory(arg2);
+        
+        // Check that the sourceFile exists
+        if(sourceFile == false){
+            disMessage(" Error: <i>'"+arg1+"'</i> does not exist");
+        }
+        
+        if(sourceFile[2] == null){
+            sourceIsFile = true;
+        } else{
+            sourceIsFile = false;
+        }
+        
+        /*
+        * Check if destination is the wanted file name
+        *
+        */
+        if(destFile == false && sourceIsFile){
+            var tempArg2 = arg2.split("/")
+            tempArg2.pop();
+            tempArg2 = tempArg2.join("/")+"/";
+                
+            // If the last file in the arg2 directory doesn't exist but the file above does then make the file.
+            if( searchByDirectory(tempArg2) != false && arg2.substr(arg2.length-4,arg2.length) == ".txt"){
+                
+                destFile = searchByDirectory(tempArg2);
+                fileName = arg2.split("/")[arg2.split("/").length-1];
+                virtualDir.push( [fileName,destFile[2],null] );
+            } else{
+                disMessage(" Error: <i>'"+arg2+"'</i> does not exist");
+            }
+        }
+
+        
+        if (arg2.charAt(arg2.length - 1) == "/") {
+            
+            if(sourceIsFile){
+                destFile = searchByDirectory(arg2);
+            }
+
+        }
+        else {
+            
+        }
+        
+        console.log(sourceFile);
+        console.log(destFile);
+    }
+}
+
+
+
+// Should not return false;
+function searchByDirectory(directory){
+    var fileFound = false;
+    var sourceIsDirectory = false;
+    var dirStrSplit = directory.split("/");
+    
+    
+    if(directory.charAt(directory.length-1) == "/"){
+        sourceIsDirectory = true;
+        // Null element is added to the end of the array which needs to removed due to splitting using the '/' char
+        dirStrSplit.pop();
+    }
+    
+    // The code knows to start the search from the root
+    if(dirStrSplit[0] == "~"){
+        var pointer = 0;
+        var latestFile;
+        
+        for(var i = 1; i <= dirStrSplit.length-1; i++){
+
+            // Will only add a '/' to the end of the string search if it's searching for a directory.
+            if(i != dirStrSplit.length-1 || sourceIsDirectory){
+                
+               latestFile = searchFileSystemLayer((dirStrSplit[i]+"/"),pointer);
+            
+               if(!latestFile){
+                   return false;
+               } else{
+                   pointer = latestFile[2];
+               }
+                
+            } else {
+                latestFile = searchFileSystemLayer(dirStrSplit[i],pointer);
+              //  if(!latestFile){
+              //     return false;
+              // } else{
+                   pointer = latestFile[2];
+              // }
+            }
+         
+        }
+        
+        return latestFile;
+    
+    } else{
+        // Searches for file starting from current file layer
+        return searchFileSystemLayer(directory,currentDir[currentDir.length-1]);
+    }
+    
+}
+
+function searchFileSystemLayer(fileName, fileLayer) {
+    if (fileName == undefined || fileName == "" || fileName == null || fileLayer == undefined || fileLayer == null) {
+        disMessage("Error: Unexcpected amount of arguments passed to function");
+    }
+    else {
+        var filesOnLayer = getFilesOnLayer(fileLayer, true);
+        
+        for (var j = 0; j <= filesOnLayer.length-1; j++) {
+            
+            if (fileName == filesOnLayer[j][0]) {
+                return filesOnLayer[j];
+            }
+        }
+        return false;
+
+    }
 }
