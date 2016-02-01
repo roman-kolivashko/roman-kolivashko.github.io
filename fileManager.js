@@ -202,11 +202,26 @@ function cp(commandString) {
             sourceIsFile = false;
         }
         
+        if(!sourceIsFile && arg2.substr(arg2.length-4,arg2.length) == ".txt"){
+            disMessage("Error: copy destination must be a folder, not a text file. ");
+            return false;
+        }
         /*
         * Check if destination is the wanted file name
         *
         */
-        if(destFile == false && sourceIsFile){
+        if(sourceIsFile && arg2.charAt(arg2.length-1) == "/"){
+            if(searchByDirectory(arg2) != false){
+                destFile = searchByDirectory(arg2);
+                fileName = sourceFile[0];
+                virtualDir.push( [fileName,destFile[2],null] );
+                return true;
+                
+            } else{
+                disMessage("Error: copy destination does not exist");
+                return false;
+            }
+        } else if(destFile == false && sourceIsFile){
             var tempArg2 = arg2.split("/")
             tempArg2.pop();
             tempArg2 = tempArg2.join("/")+"/";
@@ -218,7 +233,28 @@ function cp(commandString) {
                 fileName = arg2.split("/")[arg2.split("/").length-1];
                 virtualDir.push( [fileName,destFile[2],null] );
             } else{
-                disMessage(" Error: <i>'"+arg2+"'</i> does not exist");
+                disMessage(" Error: <i>'"+arg2+"'</i> is not a valid destination");
+            }
+        } else{
+            var tempArg2 = arg2.split("/")
+            tempArg2.pop();
+            var fileNameArg2 = tempArg2[tempArg2.length-1];
+            tempArg2 = tempArg2.join("/")+"/";
+            
+            var tempArg1 = arg2.split("/")
+            tempArg1.pop();
+            var fileNameArg1 = tempArg1[tempArg1.length-1];
+            
+            if(fileNameArg1 == fileNameArg2){
+                destFile = searchByDirectory(tempArg2);
+            } else{
+                destFile = searchByDirectory(arg2);
+            }
+            if(destFile != false){
+                virtualDir.push( [fileName,destFile[2],sourceFile[2]] );
+                return true;
+            } else{
+                disMessage(" Error: <i>'"+arg2+"'</i> is not a valid destination");
             }
         }
 
