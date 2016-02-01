@@ -1,3 +1,6 @@
+var commandHistory = [];
+var countHistory = commandHistory.length;
+
 $(document).ready( function(){
     
     // Display current date.
@@ -14,6 +17,10 @@ $(document).ready( function(){
 * Function called on enter key event on current command.
 */
 function commandHandler(){
+    if($("#commandLine").val() != ""){
+        commandHistory.push($("#commandLine").val());
+    }
+    
     processCommand($("#commandLine").val());
     appendNewCmdObject();
 }
@@ -36,12 +43,38 @@ function appendNewCmdObject(){
     $("#terminalContainer").append( "<p> "+getCurrentDir()+" <input id=\"commandLine\" maxlength=\"80\" /></p>" );
     $("#commandLine").focus();
     
+    countHistory = commandHistory.length;
+    
     // Add the event handler to the new input object    
-    $("#commandLine").keypress(function (event){
-        if(event.which == 13){
-            commandHandler();
+    $("#commandLine").keydown(function (event){
+        
+        switch (event.which){
+            case 13:
+                commandHandler();
+                break;
+            case 38:
+                cycleCommands(true);
+                break;
+            case 40:
+                cycleCommands(false);
+                break;
         }
     });
+}
+
+function cycleCommands(cycleUp){
+    console.log(countHistory);
+    if(cycleUp){
+        if(countHistory > 0){
+            countHistory--;
+            $("#commandLine").val(commandHistory[countHistory]);
+        }
+    } else{
+        if(countHistory < commandHistory.length){
+            countHistory++;
+            $("#commandLine").val(commandHistory[countHistory]);
+        }
+    }
 }
 
 /*
