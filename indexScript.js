@@ -118,6 +118,7 @@ function processCommand(cmdString){
              return true;
         case 'exit':
             window.close();
+            disMessage("This command only works on some web browsers",true)
             return true;
             
         default:
