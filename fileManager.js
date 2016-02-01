@@ -140,6 +140,9 @@ function cdCommand(arg){
     if(arg == ".." && currentDir != 0){
         currentDir.pop();
         return true;
+    } else if(arg =="~/"){
+        currentDir = [0];
+        return true;
     }
     for(var i = 0; i < currentFiles.length; i++){
         if(currentFiles[i][0] === arg && currentFiles[i][2] != null){
