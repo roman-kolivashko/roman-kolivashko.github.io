@@ -1,7 +1,8 @@
-function Node (data, parent){
-    this.children = new array();
+function Node (title, parent, dataPointer){
+    this.children = [];
     this.parent = parent;
-    this.data = data;
+    this.dataPointer = dataPointer;
+    this.title = title;
 }
 
 Node.prototype = {
@@ -21,6 +22,21 @@ Node.prototype = {
     
     changeParent:function(newParent){
         this.parent = newParent;
+    },
+    
+    getTitle: function(){
+        return this.title;
+    },
+    
+    setTitle:function(newTitle){
+        this.title = newTitle;
+    },
+    
+    getDataPointer:function(){
+        return this.dataPointer;
     }
     
 }
+
+var root = new Node("root",null, null);
+var currentNode = root;
