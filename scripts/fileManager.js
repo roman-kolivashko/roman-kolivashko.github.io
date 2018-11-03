@@ -117,9 +117,9 @@ function searchFiles(pointer, fileName){
 * Calculates the current directory and dynamically constructs the path.
 */
 function getCurrentDir(){
-    var htmlString = "<span id='root'>hywel-martin</span>:<span id='dir'>/</span>";
+    var htmlString = "<span id='root'>roman-kolivashko</span>:<span id='dir'>/</span>";
     if(currentDir.length == 1 && currentDir[0] == 0){
-        return "<span id='root'>hywel-martin</span>:<span id='dir'>/</span> $ ";
+        return "<span id='root'>roman-kolivashko</span>:<span id='dir'>/</span> $ ";
     } else{
         
         for(var i =1; i < currentDir.length; i++){
